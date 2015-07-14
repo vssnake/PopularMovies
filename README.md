@@ -1,3 +1,3 @@
 # PopularMovies
 
-Fist Implementation for PopularMovies first proyect for android Nanodegree
+First Implementation for PopularMovies first proyect for android Nanodegree
