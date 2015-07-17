@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.virtu.popularmovies.presentation.view.activity.MovieDetailsActivity;
 import com.virtu.popularmovies.presentation.view.activity.SearchMovieActivity;
+import com.virtu.popularmovies.presentation.view.activity.SettingsActivity;
 
 import javax.inject.Inject;
 
@@ -33,6 +34,13 @@ public class Navigator {
     public void navigateToDetailsMovie(Context context,Long movieID){
         if (context != null && movieID != null){
             Intent intentToLaunch = MovieDetailsActivity.getCallingIntent(context,movieID);
+            context.startActivity(intentToLaunch);
+        }
+    }
+
+    public void navigateToSettingsMovie(Context context){
+        if (context != null){
+            Intent intentToLaunch = SettingsActivity.getCallingIntent(context);
             context.startActivity(intentToLaunch);
         }
     }

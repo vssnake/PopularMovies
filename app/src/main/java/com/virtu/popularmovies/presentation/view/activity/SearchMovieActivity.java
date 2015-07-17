@@ -29,8 +29,9 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
 
     @InjectView(R.id.pager)
     ViewPager mViewPager;
-    @InjectView(R.id.sliding_tabs)
-    TabLayout mTabLayout;
+    //@InjectView(R.id.sliding_tabs)
+    //TabLayout mTabLayout;
+    Toolbar mToolbar;
 
     private PagerAdapter mPagerAdapter;
 
@@ -43,7 +44,7 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
         return new Intent(context,SearchMovieActivity.class);
     }
 
-    private static final int NUM_PAGES = 2;
+    private static final int NUM_PAGES = 1;
 
 
     @Override
@@ -51,11 +52,12 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_movie);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            toolbar.setTitle(R.string.app_name);
-            setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle(R.string.app_name);
+            setSupportActionBar(mToolbar);
         }
+
 
         this.initializeInjector();
         ButterKnife.inject(this);
@@ -63,7 +65,7 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
 
-        mTabLayout.setupWithViewPager(mViewPager);
+        //mTabLayout.setupWithViewPager(mViewPager);
 
     }
 
@@ -71,7 +73,7 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_search_artist, menu);
+        getMenuInflater().inflate(R.menu.menu_search_movies, menu);
         return true;
     }
 
@@ -84,6 +86,7 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            navigator.navigateToSettingsMovie(this);
             return true;
         }
 
@@ -100,6 +103,11 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
     @Override
     public void onMovieClicked(MovieModelPresenter movieModelPresenter) {
         this.navigator.navigateToDetailsMovie(this,movieModelPresenter.getId());
+    }
+
+    @Override
+    public void onTitleChanged(String title) {
+        mToolbar.setTitle(title);
     }
 
 

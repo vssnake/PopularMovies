@@ -2,7 +2,10 @@ package com.virtu.popularmovies.presentation.view.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,6 +92,7 @@ public class SearchSearchMovieFragment extends BaseFragment<SearchMovieActivity>
     @Override public void onResume() {
         super.onResume();
         this.presenter.resume();
+        initGrid();
     }
 
     @Override public void onPause() {
@@ -105,21 +109,52 @@ public class SearchSearchMovieFragment extends BaseFragment<SearchMovieActivity>
         super.onActivityCreated(savedInstanceState);
         this.init();
     }
-
-    public void initUI(){
-        this.moviesLayoutManager = new MoviesLayoutManager(getActivity(),2);
+    public void initGrid(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String numberColumns = "2";
+        switch (getResources().getConfiguration().orientation){
+            case  Configuration.ORIENTATION_LANDSCAPE:
+                numberColumns = sharedPreferences.getString(
+                        getActivity().getString(R.string.pref_title_number_columns_landscape_key),
+                        "3");
+                break;
+            case Configuration.ORIENTATION_PORTRAIT:
+                numberColumns = sharedPreferences.getString(
+                        getActivity().getString(R.string.pref_title_number_columns_portrait_key),
+                        "2");
+                break;
+        }
+        this.moviesLayoutManager = new MoviesLayoutManager(getActivity(),Integer.parseInt(numberColumns));
         this.recyclerViewMovies.setLayoutManager(moviesLayoutManager);
         this.recyclerViewMovies.addItemDecoration(new NoSpacingItemDecoration());
+
+        String typeSearch = sharedPreferences.getString(
+                getActivity().getString(R.string.pref_title_type_search_key),"0");
+        switch (Integer.parseInt(typeSearch)){
+            case 0:
+                this.presenter.initialize(SearchMoviePresenter.TYPE_MOVIES_LIST.HIGH_RATED);
+                mMoviesListListener.onTitleChanged(getActivity()
+                        .getString(R.string.search_movie_tab_high_score));
+                break;
+            case 1:
+                this.presenter.initialize(SearchMoviePresenter.TYPE_MOVIES_LIST.POPULAR);
+                mMoviesListListener.onTitleChanged(getActivity()
+                        .getString(R.string.search_movie_tab_popular));
+                break;
+        }
+
+    }
+
+    public void initUI(){
+
 
         bt_retry.setOnClickListener(onClickListenerRetry);
     }
 
 
     private void init() {
-
         this.getComponent(MovieComponent.class).inject(this);
         this.presenter.setView(this);
-        this.presenter.initialize(mTypeList);
     }
 
 
@@ -179,6 +214,7 @@ public class SearchSearchMovieFragment extends BaseFragment<SearchMovieActivity>
 
     public interface MovieListListener{
         void onMovieClicked(final MovieModelPresenter movieModelPresenter);
+        void onTitleChanged(String title);
     }
 
     private View.OnClickListener onClickListenerRetry =
@@ -197,5 +233,7 @@ public class SearchSearchMovieFragment extends BaseFragment<SearchMovieActivity>
                     }
                 }
             };
+
+
 
 }
