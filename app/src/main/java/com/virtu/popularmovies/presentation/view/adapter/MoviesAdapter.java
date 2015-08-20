@@ -14,8 +14,8 @@ import com.virtu.popularmovies.presentation.model.MovieModelPresenter;
 import java.util.Collection;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by virtu on 11/07/2015.
@@ -89,12 +89,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     static class MoviesViewHolder extends RecyclerView.ViewHolder{
 
 
-        @InjectView(R.id.colum_movie_image)
+        @Bind(R.id.colum_movie_image)
         ImageView imageView;
 
         public MoviesViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.inject(this, itemView);
+            ButterKnife.bind(this, itemView);
         }
 
     }

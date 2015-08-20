@@ -27,8 +27,9 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 
 
 /**
@@ -44,14 +45,14 @@ public class SearchSearchMovieFragment extends BaseFragment<SearchMovieActivity>
     @Inject
     SearchMoviePresenter presenter;
 
-    @InjectView(R.id.fragment_search_movie_recycle_view)
+    @Bind(R.id.fragment_search_movie_recycle_view)
     RecyclerView recyclerViewMovies;
 
-    @InjectView(R.id.rl_progress)
+    @Bind(R.id.rl_progress)
     RelativeLayout rl_progress;
-    @InjectView(R.id.rl_retry)
+    @Bind(R.id.rl_retry)
     RelativeLayout rl_retry;
-    @InjectView(R.id.bt_retry)
+    @Bind(R.id.bt_retry)
     Button bt_retry;
 
     public final static String  TYPE_LIST_KEY = "type_list";
@@ -75,7 +76,7 @@ public class SearchSearchMovieFragment extends BaseFragment<SearchMovieActivity>
 
         View fragmentView = inflater.inflate(R.layout.fragment_search_movie,
                 container,false);
-        ButterKnife.inject(this,fragmentView);
+        ButterKnife.bind(this,fragmentView);
         initUI();
         return fragmentView;
     }

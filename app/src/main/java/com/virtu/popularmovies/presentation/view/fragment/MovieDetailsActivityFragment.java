@@ -16,8 +16,8 @@ import com.virtu.popularmovies.presentation.view.connectors.MovieDetailsView;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -44,13 +44,13 @@ public class MovieDetailsActivityFragment extends BaseFragment<MovieDetailsActiv
     @Inject
     MovieDetailsPresenter presenter;
 
-    @InjectView(R.id.details_title)
+    @Bind(R.id.details_title)
     TextView mTitle;
-    @InjectView(R.id.details_summary)
+    @Bind(R.id.details_summary)
     TextView mSummary;
-    @InjectView(R.id.details_relase_date)
+    @Bind(R.id.details_relase_date)
     TextView mReleaseDate;
-    @InjectView(R.id.details_user_rating)
+    @Bind(R.id.details_user_rating)
     TextView mUserRating;
 
 
@@ -59,7 +59,7 @@ public class MovieDetailsActivityFragment extends BaseFragment<MovieDetailsActiv
                              Bundle savedInstanceState) {
         View fragmentView =  inflater.inflate(R.layout.fragment_movie_details, container, false);
 
-        ButterKnife.inject(this, fragmentView);
+        ButterKnife.bind(this, fragmentView);
 
         return fragmentView;
     }

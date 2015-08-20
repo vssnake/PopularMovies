@@ -17,8 +17,8 @@ import com.virtu.popularmovies.presentation.model.MovieModelPresenter;
 import com.virtu.popularmovies.presentation.view.fragment.MovieDetailsActivityFragment;
 import com.virtu.popularmovies.presentation.injection.modules.MoviesModule;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 
 public class MovieDetailsActivity extends ComponentActivity<MovieComponent> {
@@ -27,13 +27,13 @@ public class MovieDetailsActivity extends ComponentActivity<MovieComponent> {
 
     private Long movieID;
 
-    @InjectView(R.id.activity_details_movie_image)
+    @Bind(R.id.activity_details_movie_image)
     ImageView mTitleImageView;
 
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
-    @InjectView(R.id.collapsing_toolbar)
+    @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mToolbarCollapsing;
 
     /**
@@ -57,7 +57,7 @@ public class MovieDetailsActivity extends ComponentActivity<MovieComponent> {
 
         }
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         toolbar.setTitle(R.string.app_name);
 
 

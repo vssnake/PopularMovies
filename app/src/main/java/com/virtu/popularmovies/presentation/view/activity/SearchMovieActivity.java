@@ -20,14 +20,14 @@ import com.virtu.popularmovies.presentation.injection.components.MovieComponent;
 import com.virtu.popularmovies.presentation.presenter.SearchMoviePresenter;
 import com.virtu.popularmovies.presentation.view.fragment.SearchSearchMovieFragment;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 
 public class SearchMovieActivity extends ComponentActivity<MovieComponent> implements
         SearchSearchMovieFragment.MovieListListener{
 
-    @InjectView(R.id.pager)
+    @Bind(R.id.pager)
     ViewPager mViewPager;
     //@InjectView(R.id.sliding_tabs)
     //TabLayout mTabLayout;
@@ -60,7 +60,7 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
 
 
         this.initializeInjector();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
