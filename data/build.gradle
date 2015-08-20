@@ -40,6 +40,5 @@ dependencies {
     androidTestCompile testDependencies.junit
     androidTestCompile testDependencies.assertj
     androidTestCompile testDependencies.mockito
-   // androidTestCompile 'org.robolectric:robolectric:3.0'
 
 }
