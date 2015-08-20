@@ -31,7 +31,7 @@ public class GetMovieUseCase extends UseCase {
     }
 
     @Override
-    protected Observable buildUserCaseObservable() {
+    public Observable buildUseCaseObservable() {
         return this.mMoviesRepository.getMovie(this.mIdMovie);
     }
 }

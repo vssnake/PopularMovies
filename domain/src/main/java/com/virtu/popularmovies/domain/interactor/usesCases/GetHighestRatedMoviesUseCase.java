@@ -24,7 +24,7 @@ public class GetHighestRatedMoviesUseCase extends com.virtu.popularmovies.domain
     }
 
     @Override
-    protected Observable buildUserCaseObservable() {
+    public Observable buildUseCaseObservable() {
         return this.mMoviesRepository.getHighestRatedMoviesDesc();
     }
 }

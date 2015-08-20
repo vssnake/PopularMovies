@@ -26,7 +26,7 @@ public class GetPopularMoviesUseCase extends UseCase {
     }
 
     @Override
-    protected Observable buildUserCaseObservable() {
+    public Observable buildUseCaseObservable() {
         return this.mMoviesRepository.getPopularMoviesDesc();
     }
 }

@@ -31,13 +31,13 @@ public abstract class UseCase {
      * Create a Observable object. It will be executed in the current {@Link UseCase}
      * @return
      */
-    protected abstract Observable buildUserCaseObservable();
+    public abstract Observable buildUseCaseObservable();
 
 
     @SuppressWarnings("unchecked")
     public void execute(Subscriber UserCaseSubscriber){
 
-        this.mSubscription = this.buildUserCaseObservable()
+        this.mSubscription = this.buildUseCaseObservable()
                 .subscribeOn(Schedulers.from(mThreadExecutor))
                 .observeOn(mPostExecutionThread.getScheduler())
                 .subscribe(UserCaseSubscriber);

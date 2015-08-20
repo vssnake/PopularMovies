@@ -21,10 +21,12 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile project(':domain')
     def dataDependencies = rootProject.ext.dataDependencies
     def testDependencies = rootProject.ext.dataTestDependencies
 
-    compile project(':domain')
+
     apt dataDependencies.daggerCompiler
     provided dataDependencies.javaxAnnotation
     compile dataDependencies.dagger
@@ -34,8 +36,10 @@ dependencies {
     compile dataDependencies.rxAndroid
     compile dataDependencies.androidAnnotations
 
-    testCompile testDependencies.junit
-    testCompile testDependencies.assertj
-    testCompile testDependencies.mockito
-    testCompile testDependencies.robolectric
+    androidTestCompile testDependencies.robolectric
+    androidTestCompile testDependencies.junit
+    androidTestCompile testDependencies.assertj
+    androidTestCompile testDependencies.mockito
+   // androidTestCompile 'org.robolectric:robolectric:3.0'
+
 }
