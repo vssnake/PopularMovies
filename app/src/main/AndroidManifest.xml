@@ -32,10 +32,6 @@
             android:name="com.virtu.popularmovies.presentation.view.activity.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
-        <activity
-            android:name="com.virtu.popularmovies.presentation.view.activity.SettingsActivity"
-            android:label="@string/title_activity_settings" >
-        </activity>
     </application>
 
 </manifest>

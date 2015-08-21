@@ -28,7 +28,7 @@ public class DefaultErrorBundleTest {
 
     @Test
     public void testGetErrorMessageInteraction(){
-        verify(defaultErrorBundle).getErrorMessage();
+        defaultErrorBundle.getErrorMessage();
 
         verify(mockException).getMessage();
     }

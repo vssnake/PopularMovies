@@ -21,6 +21,9 @@ public class MovieDetailsActivityTest extends ActivityInstrumentationTestCase2<M
 
     private MovieDetailsActivity mMovieDetailsActivity;
 
+    public MovieDetailsActivityTest(){
+        super(MovieDetailsActivity.class);
+    }
 
     public MovieDetailsActivityTest(Class<MovieDetailsActivity> activityClass) {
         super(activityClass);

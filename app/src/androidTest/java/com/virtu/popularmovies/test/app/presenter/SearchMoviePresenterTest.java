@@ -44,6 +44,9 @@ public class SearchMoviePresenterTest extends AndroidTestCase{
 
     @Override protected void setUp() throws Exception{
         super.setUp();
+        // This workaround allows the test to work with Dexmaker 1.2. Commenting it results in error:
+        // java.lang.IllegalArgumentException: dexcache == null (and no default could be found; consider setting the 'dexmaker.dexcache' system property)
+        System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
         MockitoAnnotations.initMocks(this);
         mSearchMoviePresenter = new SearchMoviePresenter(
                 mockGetHighestRatedMoviesUseCase,
@@ -71,6 +74,6 @@ public class SearchMoviePresenterTest extends AndroidTestCase{
 
         verify(mockSearchMovieView).hideRetry();
         verify(mockSearchMovieView).showLoading();
-        verify(mockGetHighestRatedMoviesUseCase).execute(any(Subscriber.class));
+        verify(mockGetPopularMoviesUseCase).execute(any(Subscriber.class));
     }
 }

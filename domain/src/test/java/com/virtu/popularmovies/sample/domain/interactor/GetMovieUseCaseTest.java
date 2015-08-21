@@ -6,6 +6,7 @@ import com.virtu.popularmovies.domain.interactor.usesCases.GetMovieUseCase;
 import com.virtu.popularmovies.domain.repository.MoviesRepository;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -36,10 +37,17 @@ public class GetMovieUseCaseTest {
                 mockThreadExecutor,
                 mockPostExecutionThread);
 
+
+
+    }
+
+    @Test
+    public void testGetMovieDetailsUseCaseObservableHappyCase(){
+        getMovieUseCase.buildUseCaseObservable();
+
         verify(mockMoviesRepository).getMovie(FAKE_MOVIE_ID);
         verifyZeroInteractions(mockMoviesRepository);
         verifyZeroInteractions(mockThreadExecutor);
         verifyZeroInteractions(mockPostExecutionThread);
-
     }
 }

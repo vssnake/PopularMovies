@@ -30,10 +30,10 @@ ext {
 
     //Testing
     robolectricVersion = '3.0'
-    jUnitVersion = '4.12'
+    jUnitVersion = '4.+'
     assertJVersion = '3.1.0'
     mockitoVersion = '1.9.5'
-    dexmakerVersion = '1.0'
+    dexmakerVersion = '1.2'
     espressoVersion = '2.2'
     testingSupportLibVersion = '0.1'
     testRules = '0.3'

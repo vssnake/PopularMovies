@@ -23,6 +23,9 @@ public class SearchMovieActivityTest extends ActivityInstrumentationTestCase2<Se
     public SearchMovieActivityTest(Class<SearchMovieActivity> activityClass) {
         super(activityClass);
     }
+    public SearchMovieActivityTest(){
+        super(SearchMovieActivity.class);
+    }
 
 
     @Override protected void setUp() throws Exception{

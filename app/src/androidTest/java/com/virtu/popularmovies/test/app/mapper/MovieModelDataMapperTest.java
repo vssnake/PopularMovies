@@ -1,5 +1,8 @@
 package com.virtu.popularmovies.test.app.mapper;
 
+import android.test.InstrumentationTestCase;
+
+import com.example.virtu.spotifystreamer.BuildConfig;
 import com.virtu.popularmovies.domain.entities.Movie;
 import com.virtu.popularmovies.presentation.model.MovieModelPresenter;
 import com.virtu.popularmovies.presentation.model.mapper.MovieModelDataMapper;
@@ -18,12 +21,12 @@ import static org.mockito.Mockito.mock;
 /**
  * Created by unai on 20/08/15.
  */
-public class MovieModelDataMapperTest extends TestCase {
+public class MovieModelDataMapperTest extends InstrumentationTestCase {
 
     private static final long FAKE_MOVIE_ID = 12345678;
     private static final String FAKE_TITLE = "El señor de los grumillos";
     private static final String FAKE_RELEASE_DATE = "1212";
-    private static final String FAKE_POSTER_URL = "HTTP://FAKEURL.COM";
+    private static final String FAKE_POSTER_URL = "FAKEURL";
     private static final float FAKE_VOTE_AVERAGE = 4.99f;
     private static final String FAKE_OVERVIEW = "Fake Overview";
 
@@ -35,7 +38,9 @@ public class MovieModelDataMapperTest extends TestCase {
     protected void setUp() throws Exception{
         super.setUp();
         mMovieModelDataMapper = new MovieModelDataMapper();
-
+        // This workaround allows the test to work with Dexmaker 1.2. Commenting it results in error:
+        // java.lang.IllegalArgumentException: dexcache == null (and no default could be found; consider setting the 'dexmaker.dexcache' system property)
+        System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
     }
 
     public void testTransformMovie(){
@@ -46,7 +51,10 @@ public class MovieModelDataMapperTest extends TestCase {
         assertThat(movieModel.getId(),is(FAKE_MOVIE_ID));
         assertThat(movieModel.getTitle(),is(FAKE_TITLE));
         assertThat(movieModel.getOverView(),is(FAKE_OVERVIEW));
-        assertThat(movieModel.getPosterUrl(),is(FAKE_POSTER_URL));
+        assertThat(movieModel.getPosterUrl(),is(
+                Movie.API_IMAGE_BASE_URL +
+                        Movie.API_W300_ +
+                        FAKE_POSTER_URL));
         assertThat(movieModel.getReleaseDate(), is(FAKE_RELEASE_DATE));
         assertThat(movieModel.getVote_average(), is(FAKE_VOTE_AVERAGE));
     }

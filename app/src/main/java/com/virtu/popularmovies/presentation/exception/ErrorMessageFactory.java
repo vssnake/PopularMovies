@@ -25,7 +25,7 @@ public class ErrorMessageFactory {
         if (exception instanceof NetworkConnectionException) {
             message = context.getString(R.string.exception_message_no_connection);
         } else if (exception instanceof MovieNotFoundException) {
-            message = context.getString(R.string.exception_message_user_not_found);
+            message = context.getString(R.string.exception_message_movie_not_found);
         }
 
         exception.printStackTrace();

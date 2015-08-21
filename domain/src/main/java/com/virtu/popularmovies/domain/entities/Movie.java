@@ -6,9 +6,9 @@ package com.virtu.popularmovies.domain.entities;
 public class Movie {
 
 
-    static final String API_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
+    public static final String API_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
 
-    static final String API_W300_ = "w300/";
+    public static final String API_W300_ = "w300/";
 
     public Movie(Long movieID){
         this.mId = movieID;

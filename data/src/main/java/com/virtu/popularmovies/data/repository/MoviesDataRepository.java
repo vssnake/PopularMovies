@@ -49,8 +49,9 @@ public class MoviesDataRepository implements MoviesRepository {
     public MoviesDataRepository(MovieDataStoreFactory movieDataStoreFactory,
                                 MovieEntityDataMapper movieEntityDataMapper){
         this.mMovieEntityDataMapper = movieEntityDataMapper;
+        this.mMovieDataStore = movieDataStoreFactory.createCloudDataStore();
         this.mMovieDataStoreFactory = movieDataStoreFactory;
-        this.mMovieDataStore = this.mMovieDataStoreFactory.createCloudDataStore();
+
 
     }
 

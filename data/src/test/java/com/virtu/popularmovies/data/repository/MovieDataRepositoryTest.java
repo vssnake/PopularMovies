@@ -46,10 +46,12 @@ public class MovieDataRepositoryTest extends ApplicationTestCase {
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
+        given(mockMovieDataStoreFactory.createCloudDataStore()).willReturn(mockMovieDataStore);
         moviesDataRepository = new MoviesDataRepository(mockMovieDataStoreFactory,
                 mockEntityDataMapper);
 
-        given(mockMovieDataStoreFactory.createCloudDataStore()).willReturn(mockMovieDataStore);
+
+        verify(mockMovieDataStoreFactory).createCloudDataStore();
     }
 
     @Test
@@ -61,7 +63,7 @@ public class MovieDataRepositoryTest extends ApplicationTestCase {
 
         moviesDataRepository.getHighestRatedMoviesDesc();
 
-        verify(mockMovieDataStoreFactory).createCloudDataStore();
+
         verify(mockMovieDataStore).getHighRatedMoviesDesc();
 
     }
@@ -74,7 +76,7 @@ public class MovieDataRepositoryTest extends ApplicationTestCase {
 
         moviesDataRepository.getPopularMoviesDesc();
 
-        verify(mockMovieDataStoreFactory).createCloudDataStore();
+
         verify(mockMovieDataStore).getPopularMoviesDesc();
     }
     @Test
@@ -83,7 +85,7 @@ public class MovieDataRepositoryTest extends ApplicationTestCase {
         given(mockMovieDataStore.getMovie(FAKE_MOVIE_ID)).willReturn(Observable.just(movieEntity));
         moviesDataRepository.getMovie(FAKE_MOVIE_ID);
 
-        verify(mockMovieDataStoreFactory).createCloudDataStore();
+
         verify(mockMovieDataStore).getMovie(FAKE_MOVIE_ID);
 
     }
