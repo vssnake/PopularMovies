@@ -61,7 +61,7 @@ public class MovieEntity {
         return mVote_average;
     }
 
-    public void setVote_average(Integer mVote_average) {
+    public void setVote_average(float mVote_average) {
         this.mVote_average = mVote_average;
     }
 

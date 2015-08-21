@@ -94,7 +94,7 @@ public class CloudMovieDataStore implements MovieDataStore {
      * @param id
      * @return
      */
-    private MovieEntity searchMovieInCache(Long id){
+    public MovieEntity searchMovieInCache(Long id){
         MovieEntity movieEntity = null;
         for (int x = 0; x<mCacheHighRatedMovies.size();x++){
             if(mCacheHighRatedMovies.get(x).getId().equals(id)){
