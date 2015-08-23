@@ -1,6 +1,10 @@
 package com.virtu.popularmovies.data.entity.mapper;
 
 import com.virtu.popularmovies.data.entity.MovieEntity;
+import com.virtu.popularmovies.data.entity.ReviewMovieEntity;
+import com.virtu.popularmovies.data.entity.VideoMovieEntity;
+import com.virtu.popularmovies.domain.entities.Review;
+import com.virtu.popularmovies.domain.entities.Video;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +33,45 @@ public class MovieEntityDataMapper {
         movie.setPosterUrl(movieEntity.getPosterUrl());
         movie.setReleaseDate(movieEntity.getReleaseDate());
         movie.setVote_average(movieEntity.getVote_average());
+        return movie;
+    }
+    /**
+     * Transform a {@link MovieEntity} into a {@link com.virtu.popularmovies.domain.entities.Movie}
+     * @param movieEntity
+     * @return
+     */
+    public com.virtu.popularmovies.domain.entities.Movie transform(
+            MovieEntity movieEntity,
+            List<VideoMovieEntity> videosEntities,
+            List<ReviewMovieEntity> reviewMovieEntities){
+        com.virtu.popularmovies.domain.entities.Movie movie = null;
+        movie = new com.virtu.popularmovies.domain.entities.Movie(movieEntity.getId());
+        movie.setTitle(movieEntity.getTitle());
+        movie.setOverView(movieEntity.getOverView());
+        movie.setPosterUrl(movieEntity.getPosterUrl());
+        movie.setReleaseDate(movieEntity.getReleaseDate());
+        movie.setVote_average(movieEntity.getVote_average());
+
+        List<Video> videos = new ArrayList<Video>();
+        for (VideoMovieEntity videoMovieEntity: videosEntities){
+            Video video = new Video();
+            video.setName(videoMovieEntity.getName());
+            video.setKeyVideo(videoMovieEntity.getKey());
+            video.setSite(videoMovieEntity.getSite());
+            video.setType(videoMovieEntity.getTypeVideo());
+            videos.add(video);
+        }
+        movie.setVideos(videos);
+
+        List<Review> reviews = new ArrayList<Review>();
+        for (ReviewMovieEntity reviewMovieEntity: reviewMovieEntities){
+            Review review = new Review();
+            review.setAuthor(reviewMovieEntity.getAuthor());
+            review.setContent(reviewMovieEntity.getContent());
+            reviews.add(review);
+        }
+        movie.setReviews(reviews);
+
         return movie;
     }
 

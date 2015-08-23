@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.virtu.popularmovies.data.entity.MovieEntity;
+import com.virtu.popularmovies.data.entity.ReviewMovieEntity;
+import com.virtu.popularmovies.data.entity.VideoMovieEntity;
 import com.virtu.popularmovies.data.exception.NetworkConnectionException;
 import com.virtu.popularmovies.data.entity.mapper.MovieEntityJsonMapper;
 
@@ -95,6 +97,60 @@ public class RestApiImpl implements  RestApi {
         });
     }
 
+    @Override
+    public Observable<List<ReviewMovieEntity>> getReviewMovie(final Long idMovie) {
+        return Observable.create(new Observable.OnSubscribe<List<ReviewMovieEntity>>() {
+            @Override
+            public void call(Subscriber<? super List<ReviewMovieEntity>> subscriber) {
+                if (isInternetConnection()){
+                    String response = getReviewsFromMovieFromApi(idMovie);
+
+                    if (response != null){
+                        try {
+                            subscriber.onNext(mMovieEntityJsonMapper
+                                    .transformReviewEntityCollection(response));
+                            subscriber.onCompleted();
+                        } catch (JSONException e) {
+                            subscriber.onError(e);
+                        }
+                    }else{
+                        subscriber.onError(new NetworkConnectionException());
+                    }
+
+                }else{
+                    subscriber.onError(new NetworkConnectionException());
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<VideoMovieEntity>> getVideosMovie(final Long idMovie) {
+        return Observable.create(new Observable.OnSubscribe<List<VideoMovieEntity>>() {
+            @Override
+            public void call(Subscriber<? super List<VideoMovieEntity>> subscriber) {
+                if (isInternetConnection()){
+                    String response = getVideosFromMovieFromApi(idMovie);
+
+                    if (response != null){
+                        try {
+                            subscriber.onNext(mMovieEntityJsonMapper
+                                    .transformVideosEntityCollection(response));
+                            subscriber.onCompleted();
+                        } catch (JSONException e) {
+                            subscriber.onError(e);
+                        }
+                    }else{
+                        subscriber.onError(new NetworkConnectionException());
+                    }
+
+                }else{
+                    subscriber.onError(new NetworkConnectionException());
+                }
+            }
+        });
+    }
+
     private String getHighRatedMoviesFromApi(){
         mApiBridge.setURL(API_BASE_URL +
                 API_URL_GET_MOVIE_LIST +
@@ -117,6 +173,30 @@ public class RestApiImpl implements  RestApi {
                 API_QUERY_KEY +
                 API_QUERY_SORT_BY_POPULARITY_DESC_VALUE +
                 API_CONCAT_QUERY +
+                API_KEY_NAME +
+                API_KEY_VALUE);
+
+        return mApiBridge.requestSyncCall();
+    }
+
+    private String getReviewsFromMovieFromApi(Long idMovie){
+        mApiBridge.setURL(API_BASE_URL +
+                API_MOVIE_ +
+                "/" + idMovie +
+                API_REVIEW_ +
+                API_QUERY_KEY +
+                API_KEY_NAME +
+                API_KEY_VALUE);
+
+        return mApiBridge.requestSyncCall();
+    }
+
+    private String getVideosFromMovieFromApi(Long idMovie){
+        mApiBridge.setURL(API_BASE_URL +
+                API_MOVIE_ +
+                "/" + idMovie +
+                API_VIDEO_ +
+                API_QUERY_KEY +
                 API_KEY_NAME +
                 API_KEY_VALUE);
 

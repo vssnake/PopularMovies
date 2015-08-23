@@ -1,6 +1,8 @@
 package com.virtu.popularmovies.data.net;
 
 import com.virtu.popularmovies.data.entity.MovieEntity;
+import com.virtu.popularmovies.data.entity.ReviewMovieEntity;
+import com.virtu.popularmovies.data.entity.VideoMovieEntity;
 
 import java.util.List;
 
@@ -15,6 +17,9 @@ public interface RestApi {
 
 
     static final String API_W300_ = "w300/";
+    static final String API_MOVIE_ = "/movie";
+    static final String API_REVIEW_ = "/reviews";
+    static final String API_VIDEO_ = "/videos";
 
     static final String API_URL_GET_MOVIE_LIST =  "discover/movie";
 
@@ -28,12 +33,17 @@ public interface RestApi {
 
 
 
+
     static final String API_QUERY_KEY = "?";
     static final String API_CONCAT_QUERY = "&";
 
     Observable<List<MovieEntity>> getMovieEntityListPopularityDESC();
 
     Observable<List<MovieEntity>> getMovieEntityListVoteAverageDesc();
+
+    Observable<List<ReviewMovieEntity>> getReviewMovie(Long idMovie);
+
+    Observable<List<VideoMovieEntity>> getVideosMovie(Long idMovie);
 
 
 }

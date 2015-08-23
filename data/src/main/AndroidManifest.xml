@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.virtu.spotifystreamer.data">
+    package="com.virtu.popularmovies.data">
 
-    <application android:allowBackup="true"/>
+    <application android:allowBackup="true">
+        <provider
+            android:authorities="com.virtu.popularmovies.app"
+            android:name=".repository.provider.MoviesProvider" />
+    </application>
+
 
 </manifest>

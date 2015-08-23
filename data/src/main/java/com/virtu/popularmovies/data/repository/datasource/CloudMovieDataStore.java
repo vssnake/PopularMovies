@@ -1,6 +1,8 @@
 package com.virtu.popularmovies.data.repository.datasource;
 
 import com.virtu.popularmovies.data.entity.MovieEntity;
+import com.virtu.popularmovies.data.entity.ReviewMovieEntity;
+import com.virtu.popularmovies.data.entity.VideoMovieEntity;
 import com.virtu.popularmovies.data.exception.MovieNotFoundException;
 import com.virtu.popularmovies.data.net.RestApi;
 
@@ -87,7 +89,28 @@ public class CloudMovieDataStore implements MovieDataStore {
             }
         });
 
-    };
+    }
+
+    @Override
+    public Observable<List<ReviewMovieEntity>> getReview(Long movieID) {
+
+        //TODO Cache Module
+        return this.mRestApi.getReviewMovie(movieID);
+    }
+
+    @Override
+    public Observable<List<VideoMovieEntity>> getVideo(Long movieID) {
+
+        //TODO Cache Module
+        return this.mRestApi.getVideosMovie(movieID);
+    }
+
+    @Override
+    public Observable<MovieEntity> markStarred(Long movieID) {
+        return null;
+    }
+
+    ;
 
     /**
      * Primitive implementation of cache
