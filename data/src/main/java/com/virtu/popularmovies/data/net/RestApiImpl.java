@@ -46,26 +46,31 @@ public class RestApiImpl implements  RestApi {
     public Observable<List<MovieEntity>> getMovieEntityListPopularityDESC() {
         return Observable.create(new Observable.OnSubscribe<List<MovieEntity>>() {
             @Override
-            public void call(Subscriber<? super List<MovieEntity>> subscriber) {
+            public void call(final Subscriber<? super List<MovieEntity>> subscriber) {
                 if (isInternetConnection()){
-                        String response = getHighPopularityMoviesFromApi();
+                        getHighPopularityMoviesFromApi(new ApiBridge.ResponseStringCallback() {
+                            @Override
+                            public void onStringResponse(String response) {
+                                if (response != null){
+                                    try {
+                                        subscriber.onNext(mMovieEntityJsonMapper
+                                                .transformMovieEntityCollection(response));
+                                        subscriber.onCompleted();
+                                    } catch (JSONException e) {
+                                        subscriber.onError(e);
 
-                    if (response != null){
-                        try {
-                            subscriber.onNext(mMovieEntityJsonMapper
-                                    .transformMovieEntityCollection(response));
-                        } catch (JSONException e) {
-                            subscriber.onError(e);
-                        }
-
-                    }else{
-                        subscriber.onError(new NetworkConnectionException());
-                    }
-
+                                    } finally {
+                                        subscriber.onCompleted();
+                                    }
+                                }else{
+                                    subscriber.onError(new NetworkConnectionException());
+                                }
+                            }
+                        });
                 }else{
                     subscriber.onError(new NetworkConnectionException());
                 }
-                subscriber.onCompleted();
+
             }
         });
     }
@@ -74,22 +79,24 @@ public class RestApiImpl implements  RestApi {
     public Observable<List<MovieEntity>> getMovieEntityListVoteAverageDesc() {
         return Observable.create(new Observable.OnSubscribe<List<MovieEntity>>() {
             @Override
-            public void call(Subscriber<? super List<MovieEntity>> subscriber) {
+            public void call(final Subscriber<? super List<MovieEntity>> subscriber) {
                 if (isInternetConnection()){
-                    String response = getHighRatedMoviesFromApi();
-
-                    if (response != null){
-                        try {
-                            subscriber.onNext(mMovieEntityJsonMapper
-                                    .transformMovieEntityCollection(response));
-                            subscriber.onCompleted();
-                        } catch (JSONException e) {
-                            subscriber.onError(e);
+                    getHighRatedMoviesFromApi(new ApiBridge.ResponseStringCallback() {
+                        @Override
+                        public void onStringResponse(String response) {
+                            if (response != null){
+                                try {
+                                    subscriber.onNext(mMovieEntityJsonMapper
+                                            .transformMovieEntityCollection(response));
+                                    subscriber.onCompleted();
+                                } catch (JSONException e) {
+                                    subscriber.onError(e);
+                                }
+                            }else{
+                                subscriber.onError(new NetworkConnectionException());
+                            }
                         }
-                    }else{
-                        subscriber.onError(new NetworkConnectionException());
-                    }
-
+                    });
                 }else{
                     subscriber.onError(new NetworkConnectionException());
                 }
@@ -101,22 +108,24 @@ public class RestApiImpl implements  RestApi {
     public Observable<List<ReviewMovieEntity>> getReviewMovie(final Long idMovie) {
         return Observable.create(new Observable.OnSubscribe<List<ReviewMovieEntity>>() {
             @Override
-            public void call(Subscriber<? super List<ReviewMovieEntity>> subscriber) {
+            public void call(final Subscriber<? super List<ReviewMovieEntity>> subscriber) {
                 if (isInternetConnection()){
-                    String response = getReviewsFromMovieFromApi(idMovie);
-
-                    if (response != null){
-                        try {
-                            subscriber.onNext(mMovieEntityJsonMapper
-                                    .transformReviewEntityCollection(response));
-                            subscriber.onCompleted();
-                        } catch (JSONException e) {
-                            subscriber.onError(e);
+                    getReviewsFromMovieFromApi(idMovie, new ApiBridge.ResponseStringCallback() {
+                        @Override
+                        public void onStringResponse(String response) {
+                            if (response != null){
+                                try {
+                                    subscriber.onNext(mMovieEntityJsonMapper
+                                            .transformReviewEntityCollection(response));
+                                    subscriber.onCompleted();
+                                } catch (JSONException e) {
+                                    subscriber.onError(e);
+                                }
+                            }else{
+                                subscriber.onError(new NetworkConnectionException());
+                            }
                         }
-                    }else{
-                        subscriber.onError(new NetworkConnectionException());
-                    }
-
+                    });
                 }else{
                     subscriber.onError(new NetworkConnectionException());
                 }
@@ -128,21 +137,26 @@ public class RestApiImpl implements  RestApi {
     public Observable<List<VideoMovieEntity>> getVideosMovie(final Long idMovie) {
         return Observable.create(new Observable.OnSubscribe<List<VideoMovieEntity>>() {
             @Override
-            public void call(Subscriber<? super List<VideoMovieEntity>> subscriber) {
+            public void call(final Subscriber<? super List<VideoMovieEntity>> subscriber) {
                 if (isInternetConnection()){
-                    String response = getVideosFromMovieFromApi(idMovie);
-
-                    if (response != null){
-                        try {
-                            subscriber.onNext(mMovieEntityJsonMapper
-                                    .transformVideosEntityCollection(response));
-                            subscriber.onCompleted();
-                        } catch (JSONException e) {
-                            subscriber.onError(e);
+                    getVideosFromMovieFromApi(idMovie, new ApiBridge.ResponseStringCallback() {
+                        @Override
+                        public void onStringResponse(String response) {
+                            if (response != null){
+                                try {
+                                    subscriber.onNext(mMovieEntityJsonMapper
+                                            .transformVideosEntityCollection(response));
+                                    subscriber.onCompleted();
+                                } catch (JSONException e) {
+                                    subscriber.onError(e);
+                                }
+                            }else{
+                                subscriber.onError(new NetworkConnectionException());
+                            }
                         }
-                    }else{
-                        subscriber.onError(new NetworkConnectionException());
-                    }
+                    });
+
+
 
                 }else{
                     subscriber.onError(new NetworkConnectionException());
@@ -151,7 +165,7 @@ public class RestApiImpl implements  RestApi {
         });
     }
 
-    private String getHighRatedMoviesFromApi(){
+    private void getHighRatedMoviesFromApi(ApiBridge.ResponseStringCallback callback){
         mApiBridge.setURL(API_BASE_URL +
                 API_URL_GET_MOVIE_LIST +
                 API_QUERY_KEY +
@@ -164,10 +178,11 @@ public class RestApiImpl implements  RestApi {
                 API_KEY_NAME +
                 API_KEY_VALUE);
 
-        return mApiBridge.requestSyncCall();
+        mApiBridge.requestAsyncCall(callback);
+       // return mApiBridge.requestSyncCall();
     }
 
-    private String getHighPopularityMoviesFromApi(){
+    private void getHighPopularityMoviesFromApi(ApiBridge.ResponseStringCallback callback){
         mApiBridge.setURL(API_BASE_URL +
                 API_URL_GET_MOVIE_LIST +
                 API_QUERY_KEY +
@@ -176,10 +191,10 @@ public class RestApiImpl implements  RestApi {
                 API_KEY_NAME +
                 API_KEY_VALUE);
 
-        return mApiBridge.requestSyncCall();
+        mApiBridge.requestAsyncCall(callback);
     }
 
-    private String getReviewsFromMovieFromApi(Long idMovie){
+    private void getReviewsFromMovieFromApi(Long idMovie,ApiBridge.ResponseStringCallback callback){
         mApiBridge.setURL(API_BASE_URL +
                 API_MOVIE_ +
                 "/" + idMovie +
@@ -188,10 +203,10 @@ public class RestApiImpl implements  RestApi {
                 API_KEY_NAME +
                 API_KEY_VALUE);
 
-        return mApiBridge.requestSyncCall();
+        mApiBridge.requestAsyncCall(callback);
     }
 
-    private String getVideosFromMovieFromApi(Long idMovie){
+    private void getVideosFromMovieFromApi(Long idMovie,ApiBridge.ResponseStringCallback callback){
         mApiBridge.setURL(API_BASE_URL +
                 API_MOVIE_ +
                 "/" + idMovie +
@@ -200,7 +215,7 @@ public class RestApiImpl implements  RestApi {
                 API_KEY_NAME +
                 API_KEY_VALUE);
 
-        return mApiBridge.requestSyncCall();
+        mApiBridge.requestAsyncCall(callback);
     }
 
 

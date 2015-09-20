@@ -3,33 +3,21 @@ package com.virtu.popularmovies.data.repository.provider;
 import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.UriPermission;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.test.AndroidTestCase;
-import android.util.Log;
 
-import com.virtu.popularmovies.data.AplicationStub;
 import com.virtu.popularmovies.data.ApplicationTestCase;
 import com.virtu.popularmovies.data.repository.provider.MoviesContract.MovieEntry;
+import com.virtu.popularmovies.data.repository.provider.utils.ProviderTestUtilities;
+import com.virtu.popularmovies.data.repository.provider.utils.ProviderUtilities;
 
-import org.apache.tools.ant.types.resources.comparators.Content;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
-import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
-import org.robolectric.internal.Shadow;
-import org.robolectric.res.builder.RobolectricPackageManager;
-import org.robolectric.shadows.Provider;
 import org.robolectric.shadows.ShadowApplication;
-
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -126,14 +114,14 @@ public class TestProvider extends ApplicationTestCase {
        //Insert our test records into the database
         MoviesDbHelper dbHelper = new MoviesDbHelper(getContext());
 
-        ContentValues movieValue = TestUtilities.createMovieValue();
-        ContentValues reviewValue = TestUtilities.createReviewValues();
-        ContentValues videoValue = TestUtilities.createVideoValues();
+        ContentValues movieValue = ProviderTestUtilities.createMovieValue(false);
+        ContentValues reviewValue = ProviderTestUtilities.createReviewValues();
+        ContentValues videoValue = ProviderTestUtilities.createVideoValues();
         ContentValues allInner = new ContentValues();
         allInner.putAll(movieValue);
         allInner.putAll(reviewValue);
         allInner.putAll(videoValue);
-        long movieRowId = TestUtilities.insertDefaultMovieWithReviewAndVideo(getContext());
+        long movieRowId = ProviderTestUtilities.insertDefaultMovieWithReviewAndVideo(getContext());
 
         Cursor movieCursor = getContext().getContentResolver().query(
                 MovieEntry.buildMovieUri(movieRowId),
@@ -143,7 +131,7 @@ public class TestProvider extends ApplicationTestCase {
                 null
         );
 
-        TestUtilities.validateCursor("testBasicMovieQuery", movieCursor, allInner);
+        ProviderTestUtilities.validateCursor("testBasicMovieQuery", movieCursor, allInner);
 
     }
 
@@ -151,10 +139,11 @@ public class TestProvider extends ApplicationTestCase {
     @Test
     /**
      * This test uses the provider to insert and then update the data.
+     * Update favourite and movieID
      */
     public void testUpdateMovie(){
         //Create a new map of values, where column names are the keys
-        ContentValues values = TestUtilities.createMovieValue();
+        ContentValues values = ProviderTestUtilities.createMovieValue(true);
 
         Uri movieUri = getContext().getContentResolver().insert(
                 MovieEntry.CONTENT_URI, values);
@@ -165,11 +154,12 @@ public class TestProvider extends ApplicationTestCase {
         //assertTrue(movieRowId != -1);
 
         ContentValues updateValues = new ContentValues(values);
+        //Update data
         updateValues.put(MovieEntry._ID,movieRowId);
         updateValues.put(MovieEntry.COLUMN_FAVOURITE, 0);
 
         //Create a cursor with observer to make sure that the content provider is notifying
-        //the observer as expented
+        //the observer as expected
         Cursor movieCursor = getContext().getContentResolver().query(
                 MovieEntry.CONTENT_URI,
                 null,
@@ -180,9 +170,9 @@ public class TestProvider extends ApplicationTestCase {
 
 
 
-        TestUtilities.TestContentObserver testContentObserver =
-                TestUtilities.getTestContentObserver();
-        getContext().getContentResolver().registerContentObserver( MoviesContract.MovieEntry.buildMovieUri(movieRowId),
+        ProviderTestUtilities.TestContentObserver testContentObserver =
+                ProviderTestUtilities.getTestContentObserver();
+        getContext().getContentResolver().registerContentObserver(MoviesContract.MovieEntry.buildMovieUri(movieRowId),
                 true,
                 testContentObserver);
         int count = getContext().getContentResolver().update(
@@ -209,8 +199,8 @@ public class TestProvider extends ApplicationTestCase {
                 null
         );
 
-        TestUtilities.validateCursor("testUpdateMovie. Error validating location entry update.",
-                cursor,updateValues);
+        ProviderTestUtilities.validateCursor("testUpdateMovie. Error validating location entry update.",
+                cursor, updateValues);
 
         cursor.close();
 
@@ -221,10 +211,10 @@ public class TestProvider extends ApplicationTestCase {
      * Make sure we call still delete after adding/updating stuff
      */
     public void testInsertReadProvider(){
-        ContentValues testValues = TestUtilities.createMovieValue();
+        ContentValues testValues = ProviderTestUtilities.createMovieValue(false);
 
         //Register a content observer for our insert. This time. directly with the content resolver
-        TestUtilities.TestContentObserver testContentObserver = TestUtilities.getTestContentObserver();
+        ProviderTestUtilities.TestContentObserver testContentObserver = ProviderTestUtilities.getTestContentObserver();
         getContext().getContentResolver().registerContentObserver(MovieEntry.CONTENT_URI,
                 true,
                 testContentObserver);
@@ -252,7 +242,7 @@ public class TestProvider extends ApplicationTestCase {
                 null
         );
 
-        TestUtilities.validateCursor("testInsertReadProvider. Error validating MovieEntry",
+        ProviderTestUtilities.validateCursor("testInsertReadProvider. Error validating MovieEntry",
                 cursor, testValues);
     }
 
@@ -264,7 +254,7 @@ public class TestProvider extends ApplicationTestCase {
         testInsertReadProvider();
 
         //Register a content observer for our location delete.
-        TestUtilities.TestContentObserver movieObserver = TestUtilities.getTestContentObserver();
+        ProviderTestUtilities.TestContentObserver movieObserver = ProviderTestUtilities.getTestContentObserver();
         getContext().getContentResolver().registerContentObserver(MovieEntry.CONTENT_URI,
                 true, movieObserver);
 
@@ -277,15 +267,135 @@ public class TestProvider extends ApplicationTestCase {
 
     static private final int BULK_INSERT_RECORDS_TO_INSERT = 10;
     static ContentValues[] createBulkInsertMoviesValues(){
-        long currentTestDate = TestUtilities.TEST_DATE;
+        long currentTestDate = ProviderTestUtilities.TEST_DATE;
         long millisecondsInADay = 100*60*60*24;
         ContentValues[] returnContentValues = new ContentValues[BULK_INSERT_RECORDS_TO_INSERT];
 
         for (int i = 0; i<BULK_INSERT_RECORDS_TO_INSERT; i++, currentTestDate +=millisecondsInADay){
-            returnContentValues[i] = TestUtilities.createVariableValues(i);
+            returnContentValues[i] = ProviderTestUtilities.createVariableValues(i);
         }
         return returnContentValues;
     }
+
+
+    @Test
+    /**
+     * Insert a full movie with Reviews and videos
+     */
+    public void insertFullMovie(){
+        testInsertReadProvider();
+
+        ContentValues reviewValues = ProviderTestUtilities.createReviewValues();
+
+        ProviderTestUtilities.TestContentObserver testContentObserver = ProviderTestUtilities.getTestContentObserver();
+        getContext().getContentResolver().registerContentObserver(MoviesContract.ReviewEntry.buildReviewUri(1),
+                true,
+                testContentObserver);
+        Uri reviewUri = getContext().getContentResolver().insert(
+                MoviesContract.ReviewEntry.buildReviewUri(1), reviewValues);
+
+        //Verify if the insert call the content resolver
+        testContentObserver.waitForNotificationOrFail();
+
+        getContext().getContentResolver().unregisterContentObserver(testContentObserver);
+
+
+        // long reviewRowId = ContentUris.parseId(reviewUri);
+
+        //Verify we got a row back
+        assertThat(MoviesContract.ReviewEntry.buildReviewUri(1), is(reviewUri));
+
+        getContext().getContentResolver().registerContentObserver(MoviesContract.VideoEntry.CONTENT_URI,
+                true,
+                testContentObserver);
+
+        ContentValues videoValues = ProviderTestUtilities.createVideoValues();
+
+        Uri videoUri = getContext().getContentResolver().insert(
+                MoviesContract.VideoEntry.buildVideoUri(1), videoValues);
+
+        //Verify if the insert call the content resolver
+        testContentObserver.waitForNotificationOrFail();
+
+        getContext().getContentResolver().unregisterContentObserver(testContentObserver);
+
+        //Verify we got a row back
+        assertThat(MoviesContract.VideoEntry.buildVideoUri(1), is(videoUri));
+
+
+
+        //Query with joins of the three tables
+        Cursor fullMoviesCursor = getContext().getContentResolver().query(MoviesContract.MovieEntry.buildMovieUri(1),
+                null,
+                null,
+                null,
+                null);
+
+        ProviderTestUtilities.validateWithoutCloseCursor("testingVideoValues. Error validating VideoEntry",
+                fullMoviesCursor, videoValues);
+
+        ProviderTestUtilities.validateCursor("testInsertReadProvider. Error validating Review",
+                fullMoviesCursor, reviewValues);
+
+
+        //Now is time to delete
+    }
+
+    @Test
+    public void deleteFullMovie(){
+        insertFullMovie();
+
+        /*getContext().getContentResolver().delete(
+                MoviesContract.ReviewEntry.buildReviewUri(1),
+                MoviesContract.ReviewEntry.COLUMN_MOVIE_KEY +"= ?",
+                new String[]{"1"}
+        );
+
+        getContext().getContentResolver().delete(
+                MoviesContract.VideoEntry.buildVideoUri(1),
+                MoviesContract.VideoEntry.COLUMN_MOVIE_KEY + "= ?",
+                new String[]{"1"}
+        );*/
+
+        getContext().getContentResolver().delete(
+                MovieEntry.buildMovieUri(1),
+                null,
+                null
+        );
+
+
+
+        //Query with joins of the three tables
+        Cursor fullMoviesCursor = getContext().getContentResolver().query(MoviesContract.MovieEntry.buildMovieUri(1),
+                null,
+                null,
+                null,
+                null);
+        assertThat(0, is(fullMoviesCursor.getCount()));
+        fullMoviesCursor.close();
+
+        //Query with joins of the three tables
+        Cursor reviewCursor = getContext().getContentResolver().query(MoviesContract.ReviewEntry.buildReviewUri(1),
+                null,
+                MoviesContract.ReviewEntry.COLUMN_MOVIE_KEY +"= ?",
+                new String[]{"1"},
+                null);
+        assertThat(0, is(reviewCursor.getCount()));
+        reviewCursor.close();
+
+        //Query with joins of the three tables
+        Cursor videoCursor = getContext().getContentResolver().query(MoviesContract.VideoEntry.buildVideoUri(1),
+                null,
+                MoviesContract.VideoEntry.COLUMN_MOVIE_KEY +"= ?",
+                new String[]{"1"},
+                null);
+        assertThat(0, is(videoCursor.getCount()));
+        videoCursor.close();
+
+
+
+    }
+
 
     @Test
     /**
@@ -296,7 +406,7 @@ public class TestProvider extends ApplicationTestCase {
         //Now we can bulkInsert some weather.
         ContentValues[] bulkInsertContentValues = createBulkInsertMoviesValues();
 
-        TestUtilities.TestContentObserver movieObserver = TestUtilities.getTestContentObserver();
+        ProviderTestUtilities.TestContentObserver movieObserver = ProviderTestUtilities.getTestContentObserver();
         getContext().getContentResolver().registerContentObserver(MovieEntry.CONTENT_URI, true,
                 movieObserver);
 
@@ -323,8 +433,8 @@ public class TestProvider extends ApplicationTestCase {
 
         cursor.moveToFirst();
         for (int i = 0; i < BULK_INSERT_RECORDS_TO_INSERT; i++, cursor.moveToNext()){
-            TestUtilities.validateCurrentRecord("testBulkInsert. Error validating WeatherEntry " + i,
-            cursor, bulkInsertContentValues[i]);
+            ProviderTestUtilities.validateCurrentRecord("testBulkInsert. Error validating MovieEntry " + i,
+                    cursor, bulkInsertContentValues[i]);
         }
         cursor.close();
     }

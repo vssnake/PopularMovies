@@ -2,9 +2,12 @@ package com.virtu.popularmovies.data.repository;
 
 import com.virtu.popularmovies.data.ApplicationTestCase;
 import com.virtu.popularmovies.data.entity.MovieEntity;
+import com.virtu.popularmovies.data.entity.ReviewMovieEntity;
+import com.virtu.popularmovies.data.entity.VideoMovieEntity;
 import com.virtu.popularmovies.data.entity.mapper.MovieEntityDataMapper;
 import com.virtu.popularmovies.data.repository.datasource.MovieDataStore;
 import com.virtu.popularmovies.data.repository.datasource.MovieDataStoreFactory;
+import com.virtu.popularmovies.domain.entities.MovieD;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func3;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -82,11 +87,31 @@ public class MovieDataRepositoryTest extends ApplicationTestCase {
     @Test
     public void testGetMovieDetailsHappyCase(){
         MovieEntity movieEntity = new MovieEntity();
-        given(mockMovieDataStore.getMovie(FAKE_MOVIE_ID)).willReturn(Observable.just(movieEntity));
-        moviesDataRepository.getMovie(FAKE_MOVIE_ID);
+        List<ReviewMovieEntity> reviewEntity = new ArrayList<ReviewMovieEntity>();
+        List<VideoMovieEntity> videosEntity = new ArrayList<VideoMovieEntity>();
+        final Func3<MovieEntity, List<ReviewMovieEntity>, List<VideoMovieEntity>, Void> callbackMovie =
+                new Func3<MovieEntity, List<ReviewMovieEntity>, List<VideoMovieEntity>, Void>(){
+
+                    @Override
+                    public Void call(MovieEntity movieEntity,
+                                     List<ReviewMovieEntity> reviewMovieEntities,
+                                     List<VideoMovieEntity> videoMovieEntities) {
+                        return null;
+                    }
+                };
+       // given(mockMovieDataStore.getMovie(FAKE_MOVIE_ID)).willReturn(Observable.just(movieEntity));
+        given(mockMovieDataStore.getReview(FAKE_MOVIE_ID)).willReturn(Observable.just(reviewEntity));
+        given(mockMovieDataStore.getVideo(FAKE_MOVIE_ID)).willReturn(Observable.just(videosEntity));
+        moviesDataRepository.getMovie(FAKE_MOVIE_ID).subscribe(new Action1<MovieD>() {
+            @Override
+            public void call(MovieD movie) {
+                verify(mockMovieDataStore).getMovie(FAKE_MOVIE_ID,callbackMovie);
+                verify(mockMovieDataStore).getReview(FAKE_MOVIE_ID);
+                verify(mockMovieDataStore).getVideo(FAKE_MOVIE_ID);
+            }
+        });
 
 
-        verify(mockMovieDataStore).getMovie(FAKE_MOVIE_ID);
 
     }
 

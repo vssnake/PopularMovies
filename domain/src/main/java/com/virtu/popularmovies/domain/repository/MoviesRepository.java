@@ -1,5 +1,7 @@
 package com.virtu.popularmovies.domain.repository;
 
+import com.virtu.popularmovies.domain.entities.MovieD;
+
 import java.util.List;
 
 import rx.Observable;
@@ -9,9 +11,13 @@ import rx.Observable;
  */
 public interface MoviesRepository {
 
-    Observable<List<com.virtu.popularmovies.domain.entities.Movie>> getPopularMoviesDesc();
+    Observable<List<MovieD>> getPopularMoviesDesc();
 
-    Observable<com.virtu.popularmovies.domain.entities.Movie> getMovie(Long id);
+    Observable<MovieD> getMovie(Long id);
 
-    Observable<List<com.virtu.popularmovies.domain.entities.Movie>> getHighestRatedMoviesDesc();
+    Observable<List<MovieD>> getFavouriteMovies(List<Long> ids);
+
+    Observable<List<MovieD>> getHighestRatedMoviesDesc();
+
+    Observable<Boolean> markStarred(long movieId,boolean starred);
 }

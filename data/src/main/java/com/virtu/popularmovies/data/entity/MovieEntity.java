@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by virtu on 08/07/2015.
- * Movie Entity used in data layer
+ * MovieD Entity used in data layer
  */
 public class MovieEntity {
 
@@ -76,7 +76,7 @@ public class MovieEntity {
     @Override public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("***** Movie Entity Details *****\n");
+        stringBuilder.append("***** MovieD Entity Details *****\n");
         stringBuilder.append("id=" + this.getId() + "\n");
         stringBuilder.append("Title=" + this.getReleaseDate() + "\n");
         stringBuilder.append("Release Date=" + this.getReleaseDate() + "\n");

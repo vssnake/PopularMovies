@@ -28,16 +28,16 @@ public class TestUriMatcher extends ApplicationTestCase {
     public void testUriMatcher(){
 
         UriMatcher testMacher = MoviesProvider.buildURIMatcher();
-        assertThat("Error: The Movie URI was matched incorrectly",
+        assertThat("Error: The MovieD URI was matched incorrectly",
                 testMacher.match(TEST_MOVIE_DIR), is(MoviesProvider.MOVIE_ID));
         assertThat("Error: The Movies URI was matched incorrectly",
                 testMacher.match(TEST_MOVIES), is(MoviesProvider.MOVIES));
-        assertThat("Error: The Movie URI was matched incorrectly",
+        assertThat("Error: The MovieD URI was matched incorrectly",
                 testMacher.match(TEST_REVIEWS), is(MoviesProvider.REVIEW));
         assertThat("Error: The Movies URI was matched incorrectly",
                 testMacher.match(TEST_VIDEOS), is(MoviesProvider.VIDEO));
 
-                //assertEquals("Error: The Movie URI was matched incorrectly",
+                //assertEquals("Error: The MovieD URI was matched incorrectly",
                 //        testMacher.match(TEST_MOVIE_DIR), MoviesProvider.MOVIE_ID);
     }
 }

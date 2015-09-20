@@ -1,6 +1,6 @@
 package com.virtu.popularmovies.sample.domain;
 
-import com.virtu.popularmovies.domain.entities.Movie;
+import com.virtu.popularmovies.domain.entities.MovieD;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,11 +15,11 @@ public class MovieTest {
 
     private static final long FAKE_MOVIDE_ID = 123456;
 
-    private Movie movie;
+    private MovieD movie;
 
     @Before
     public void setUp(){
-        movie = new Movie(FAKE_MOVIDE_ID);
+        movie = new MovieD(FAKE_MOVIDE_ID);
     }
 
     @Test

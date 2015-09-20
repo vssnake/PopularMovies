@@ -1,6 +1,7 @@
 package com.virtu.popularmovies.data.repository.datasource;
 
 import com.virtu.popularmovies.data.ApplicationTestCase;
+import com.virtu.popularmovies.data.cache.MovieCache;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,11 +23,14 @@ public class MovieDataStoreFactoryTest extends ApplicationTestCase {
 
     private MovieDataStoreFactory movieDataStoreFactory;
 
+    @Mock
+    private MovieCache mockMovieCache;
+
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
         movieDataStoreFactory =
-                new MovieDataStoreFactory(RuntimeEnvironment.application);
+                new MovieDataStoreFactory(RuntimeEnvironment.application,mockMovieCache);
     }
 
 

@@ -3,11 +3,10 @@ package com.virtu.popularmovies.data.repository.provider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.test.AndroidTestCase;
 
 import com.virtu.popularmovies.data.ApplicationTestCase;
+import com.virtu.popularmovies.data.repository.provider.utils.ProviderTestUtilities;
 
-import org.hamcrest.core.IsNot;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -123,7 +122,7 @@ public class TestDb extends ApplicationTestCase{
 
         // Second Step: Create ContentValues of what you want to insert
         // (you can use the createNorthPoleLocationValues if you wish)
-        ContentValues testValues = TestUtilities.createMovieValue();
+        ContentValues testValues = ProviderTestUtilities.createMovieValue(false);
 
         // Third Step: Insert ContentValues into database and get a row ID back
         long locationRowId;
@@ -154,9 +153,9 @@ public class TestDb extends ApplicationTestCase{
         //assertTrue("Error: No Records returned from location query", cursor.moveToFirst());
 
         // Fifth Step: Validate data in resulting Cursor with the original ContentValues
-        // (you can use the validateCurrentRecord function in TestUtilities to validate the
+        // (you can use the validateCurrentRecord function in ProviderTestUtilities to validate the
         // query if you like)
-        TestUtilities.validateCurrentRecord("Error: Location Query Validation Failed",
+        ProviderTestUtilities.validateCurrentRecord("Error: Location Query Validation Failed",
                 cursor, testValues);
 
         // Move the cursor to demonstrate that there is only one record in the database
@@ -179,7 +178,7 @@ public class TestDb extends ApplicationTestCase{
 
         // Second Step: Create ContentValues of what you want to insert
         // (you can use the createNorthPoleLocationValues if you wish)
-        ContentValues videoValues = TestUtilities.createVideoValues();
+        ContentValues videoValues = ProviderTestUtilities.createVideoValues();
 
         // Third Step: Insert ContentValues into database and get a row ID back
         long videoRowId;
@@ -210,9 +209,9 @@ public class TestDb extends ApplicationTestCase{
         //assertTrue("Error: No Records returned from location query", cursor.moveToFirst());
 
         // Fifth Step: Validate data in resulting Cursor with the original ContentValues
-        // (you can use the validateCurrentRecord function in TestUtilities to validate the
+        // (you can use the validateCurrentRecord function in ProviderTestUtilities to validate the
         // query if you like)
-        TestUtilities.validateCurrentRecord("Error: Location Query Validation Failed",
+        ProviderTestUtilities.validateCurrentRecord("Error: Location Query Validation Failed",
                 cursor, videoValues);
 
         // Move the cursor to demonstrate that there is only one record in the database
@@ -234,7 +233,7 @@ public class TestDb extends ApplicationTestCase{
 
         // Second Step: Create ContentValues of what you want to insert
         // (you can use the createNorthPoleLocationValues if you wish)
-        ContentValues reviewValues = TestUtilities.createReviewValues();
+        ContentValues reviewValues = ProviderTestUtilities.createReviewValues();
 
         // Third Step: Insert ContentValues into database and get a row ID back
         long reviewRowId;
@@ -265,9 +264,9 @@ public class TestDb extends ApplicationTestCase{
         //assertTrue("Error: No Records returned from location query", cursor.moveToFirst());
 
         // Fifth Step: Validate data in resulting Cursor with the original ContentValues
-        // (you can use the validateCurrentRecord function in TestUtilities to validate the
+        // (you can use the validateCurrentRecord function in ProviderTestUtilities to validate the
         // query if you like)
-        TestUtilities.validateCurrentRecord("Error: Location Query Validation Failed",
+        ProviderTestUtilities.validateCurrentRecord("Error: Location Query Validation Failed",
                 cursor, reviewValues);
 
         // Move the cursor to demonstrate that there is only one record in the database

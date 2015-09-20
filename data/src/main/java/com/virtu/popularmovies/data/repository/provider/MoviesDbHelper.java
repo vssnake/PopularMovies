@@ -35,15 +35,16 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
                 ReviewEntry.COLUMN_REVIEW_DATA + " TEXT NOT NULL, " +
                 ReviewEntry.COLUMN_MOVIE_KEY + " INTEGER NOT NULL, " +
                 " FOREIGN KEY (" + ReviewEntry.COLUMN_MOVIE_KEY + ") REFERENCES " +
-                MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + "));";
+                MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") ON DELETE CASCADE);";
 
         final String SQL_CREATE_VIDEO_TABLE = "CREATE TABLE " + VideoEntry.TABLE_NAME + " (" +
                VideoEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 VideoEntry.COLUMN_VIDEO_DATA + " TEXT NOT NULL, " +
                 VideoEntry.COLUMN_MOVIE_KEY + " INTEGER NOT NULL, " +
                 " FOREIGN KEY (" + VideoEntry.COLUMN_MOVIE_KEY + ") REFERENCES " +
-                MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + "));";
+                MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") ON DELETE CASCADE);";
 
+        sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON");
 
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_REVIEW_TABLE);

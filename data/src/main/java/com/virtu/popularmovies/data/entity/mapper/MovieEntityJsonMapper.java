@@ -61,6 +61,7 @@ public class MovieEntityJsonMapper {
             JSONArray jsonArray = template.getJSONArray("results");
             Type listMovieEntityType = new TypeToken<List<MovieEntity>>() {}.getType();
             movieEntityList = this.gson.fromJson(jsonArray.toString(),listMovieEntityType);
+
             return movieEntityList;
         }catch (JsonSyntaxException jsonSyntaxException){
             throw jsonSyntaxException;

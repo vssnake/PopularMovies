@@ -1,6 +1,7 @@
 package com.virtu.popularmovies.data.repository.datasource;
 
 import com.virtu.popularmovies.data.ApplicationTestCase;
+import com.virtu.popularmovies.data.cache.MovieCache;
 import com.virtu.popularmovies.data.entity.MovieEntity;
 import com.virtu.popularmovies.data.net.RestApi;
 
@@ -29,11 +30,14 @@ public class CloudMovieDataStoreTest extends ApplicationTestCase {
     @Mock
     private RestApi mockRestApi;
 
+    @Mock
+    private MovieCache mockMovieCache;
+
 
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
-        cloudMovieDataStore = new CloudMovieDataStore(mockRestApi);
+        cloudMovieDataStore = new CloudMovieDataStore(mockRestApi,mockMovieCache);
     }
 
     @Test

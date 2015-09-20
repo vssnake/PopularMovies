@@ -17,7 +17,7 @@ public interface RestApi {
 
 
     static final String API_W300_ = "w300/";
-    static final String API_MOVIE_ = "/movie";
+    static final String API_MOVIE_ = "movie";
     static final String API_REVIEW_ = "/reviews";
     static final String API_VIDEO_ = "/videos";
 

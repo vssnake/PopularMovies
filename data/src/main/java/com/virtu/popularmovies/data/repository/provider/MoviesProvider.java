@@ -1,20 +1,22 @@
 package com.virtu.popularmovies.data.repository.provider;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-
-import com.virtu.popularmovies.domain.entities.Movie;
+import android.util.Log;
 
 /**
  * Created by virtu on 21/08/2015.
  */
 public class MoviesProvider extends ContentProvider {
 
+
+    public static final String TAG = MoviesProvider.class.getSimpleName();
     //The URI Matcher used by this content provider.
     private static final UriMatcher sUriMatcher = buildURIMatcher();
     private MoviesDbHelper moviesDbHelper;
@@ -97,6 +99,7 @@ public class MoviesProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)){
             case MOVIE_ID:
             {
+                long id = ContentUris.parseId(uri);
                /* retCursor = moviesDbHelper.getReadableDatabase().query(
                         MoviesContract.MovieEntry.TABLE_NAME,
                         projection,
@@ -105,15 +108,54 @@ public class MoviesProvider extends ContentProvider {
                         null,
                         null,
                         sortOrder*/
-                retCursor = sMovieWithVideosAndReviewsQueryBuilder.query(
-                        moviesDbHelper.getReadableDatabase(),
+
+                retCursor = moviesDbHelper.getReadableDatabase().query(
+                        MoviesContract.MovieEntry.TABLE_NAME,
                         projection,
-                        selection,
-                        selectionArgs,
+                        MoviesContract.MovieEntry._ID +
+                                " = ?",
+                        new String[]{id+""},
                         null,
                         null,
                         sortOrder);
+                /*retCursor = sMovieWithVideosAndReviewsQueryBuilder.query(
+                        moviesDbHelper.getReadableDatabase(),
+                        projection,
+                        MoviesContract.MovieEntry._ID +
+                        " = ?",
+                        new String[]{id+""},
+                        null,
+                        null,
+                        sortOrder);*/
 
+                break;
+            }
+            case VIDEO:
+            {
+
+                retCursor = moviesDbHelper.getReadableDatabase().query(
+                        MoviesContract.VideoEntry.TABLE_NAME,
+                        projection,
+                        MoviesContract.VideoEntry.COLUMN_MOVIE_KEY + "= ?",
+                        new String[]{uri.getPathSegments().get(1)}, //get the key movie
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case REVIEW:
+            {
+
+                retCursor = moviesDbHelper.getReadableDatabase().query(
+                        MoviesContract.ReviewEntry.TABLE_NAME,
+                        projection,
+                        MoviesContract.ReviewEntry.COLUMN_MOVIE_KEY + "= ?",
+                        new String[]{uri.getPathSegments().get(1)},//get the key movie
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             }
             case MOVIES:
@@ -158,7 +200,7 @@ public class MoviesProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         final SQLiteDatabase db = moviesDbHelper.getWritableDatabase();
         final int math  = sUriMatcher.match(uri);
-        Uri returnUri;
+        Uri returnUri = null;
 
         long _id = -1;
         switch (math){
@@ -168,7 +210,8 @@ public class MoviesProvider extends ContentProvider {
                 if (_id > 0){
                     returnUri = MoviesContract.MovieEntry.buildMovieUri(_id);
                 }else{
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                    Log.d(TAG,"Movie already inserted in the db " +_id);
+                    //throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
             }
@@ -178,7 +221,8 @@ public class MoviesProvider extends ContentProvider {
                 if (_id > 0 ){
                     returnUri = MoviesContract.ReviewEntry.buildReviewUri(_id);
                 }else{
-                    throw new android.database.SQLException("Failed to insert row into" +uri);
+                    Log.d(TAG,"Review already inserted in the db " +_id);
+                    //throw new android.database.SQLException("Failed to insert row into" +uri);
                 }
                 break;
             }
@@ -188,7 +232,8 @@ public class MoviesProvider extends ContentProvider {
                 if (_id > 0 ){
                     returnUri = MoviesContract.VideoEntry.buildVideoUri(_id);
                 }else{
-                    throw new android.database.SQLException("Failed to insert row into" +uri);
+                    Log.d(TAG,"Video already inserted in the db " +_id);
+                   // throw new android.database.SQLException("Failed to insert row into" +uri);
                 }
                 break;
             }
@@ -210,15 +255,31 @@ public class MoviesProvider extends ContentProvider {
         switch (match){
             case MOVIE_ID:
             {
+                long id = ContentUris.parseId(uri);
                 rowsDeleted = db.delete(
-                        MoviesContract.MovieEntry.TABLE_NAME, selection,selectionArgs);
+                        MoviesContract.MovieEntry.TABLE_NAME,
+                        MoviesContract.MovieEntry._ID + " = ?",
+                        new String[]{id+""});
+                rowsDeleted += db.delete(MoviesContract.ReviewEntry.TABLE_NAME,
+                        MoviesContract.ReviewEntry.COLUMN_MOVIE_KEY + "= ?",
+                        new String[]{id+""});
+                rowsDeleted += db.delete(MoviesContract.VideoEntry.TABLE_NAME,
+                        MoviesContract.VideoEntry.COLUMN_MOVIE_KEY + "= ?",
+                        new String[]{id+""});
                 break;
 
             }
             case MOVIES:
             {
+                //Delete the main row and the foreign rows in others tables
                 rowsDeleted = db.delete(
                         MoviesContract.MovieEntry.TABLE_NAME, selection,selectionArgs);
+                rowsDeleted += db.delete(MoviesContract.ReviewEntry.TABLE_NAME,
+                        MoviesContract.ReviewEntry.COLUMN_MOVIE_KEY + "= ?",
+                        selectionArgs);
+                rowsDeleted += db.delete(MoviesContract.VideoEntry.TABLE_NAME,
+                        MoviesContract.VideoEntry.COLUMN_MOVIE_KEY + "= ?",
+                        selectionArgs);
                 break;
             }
             case REVIEW:
@@ -230,7 +291,7 @@ public class MoviesProvider extends ContentProvider {
             case VIDEO:
             {
                 rowsDeleted = db.delete(
-                        MoviesContract.ReviewEntry.TABLE_NAME,selection,selectionArgs);
+                        MoviesContract.VideoEntry.TABLE_NAME,selection,selectionArgs);
                 break;
             }
             default:

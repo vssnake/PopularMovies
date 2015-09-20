@@ -3,6 +3,7 @@ package com.virtu.popularmovies.data.entity.mapper;
 import com.virtu.popularmovies.data.entity.MovieEntity;
 import com.virtu.popularmovies.data.entity.ReviewMovieEntity;
 import com.virtu.popularmovies.data.entity.VideoMovieEntity;
+import com.virtu.popularmovies.domain.entities.MovieD;
 import com.virtu.popularmovies.domain.entities.Review;
 import com.virtu.popularmovies.domain.entities.Video;
 
@@ -21,13 +22,13 @@ public class MovieEntityDataMapper {
     public MovieEntityDataMapper(){}
 
     /**
-     * Transform a {@link MovieEntity} into a {@link com.virtu.popularmovies.domain.entities.Movie}
+     * Transform a {@link MovieEntity} into a {@link MovieD}
      * @param movieEntity
      * @return
      */
-    public com.virtu.popularmovies.domain.entities.Movie transform(MovieEntity movieEntity){
-        com.virtu.popularmovies.domain.entities.Movie movie = null;
-        movie = new com.virtu.popularmovies.domain.entities.Movie(movieEntity.getId());
+    public MovieD transform(MovieEntity movieEntity){
+        MovieD movie = null;
+        movie = new MovieD(movieEntity.getId());
         movie.setTitle(movieEntity.getTitle());
         movie.setOverView(movieEntity.getOverView());
         movie.setPosterUrl(movieEntity.getPosterUrl());
@@ -36,16 +37,16 @@ public class MovieEntityDataMapper {
         return movie;
     }
     /**
-     * Transform a {@link MovieEntity} into a {@link com.virtu.popularmovies.domain.entities.Movie}
+     * Transform a {@link MovieEntity} into a {@link MovieD}
      * @param movieEntity
      * @return
      */
-    public com.virtu.popularmovies.domain.entities.Movie transform(
+    public MovieD transform(
             MovieEntity movieEntity,
             List<VideoMovieEntity> videosEntities,
             List<ReviewMovieEntity> reviewMovieEntities){
-        com.virtu.popularmovies.domain.entities.Movie movie = null;
-        movie = new com.virtu.popularmovies.domain.entities.Movie(movieEntity.getId());
+        MovieD movie = null;
+        movie = new MovieD(movieEntity.getId());
         movie.setTitle(movieEntity.getTitle());
         movie.setOverView(movieEntity.getOverView());
         movie.setPosterUrl(movieEntity.getPosterUrl());
@@ -76,13 +77,13 @@ public class MovieEntityDataMapper {
     }
 
     /**
-     * Transform a list of {@link MovieEntity} into a Collection of {@link com.virtu.popularmovies.domain.entities.Movie}
+     * Transform a list of {@link MovieEntity} into a Collection of {@link MovieD}
      * @param movieEntityCollection Collection of {@link MovieEntity} to be converted
-     * @return List of {@link com.virtu.popularmovies.domain.entities.Movie} converted
+     * @return List of {@link MovieD} converted
      */
-    public List<com.virtu.popularmovies.domain.entities.Movie> transform(Collection<MovieEntity> movieEntityCollection){
-        List<com.virtu.popularmovies.domain.entities.Movie> movieList = new ArrayList<>();
-        com.virtu.popularmovies.domain.entities.Movie movie;
+    public List<MovieD> transform(Collection<MovieEntity> movieEntityCollection){
+        List<MovieD> movieList = new ArrayList<>();
+        MovieD movie;
         for (MovieEntity movieEntity: movieEntityCollection){
             movie = transform(movieEntity);
             if (movie != null) movieList.add(movie);
