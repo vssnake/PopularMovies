@@ -16,6 +16,7 @@ import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Func2;
 import rx.functions.Func3;
+import rx.functions.Func4;
 
 /**
  * Created by virtu on 09/07/2015.
@@ -106,8 +107,8 @@ public class CloudMovieDataStore implements MovieDataStore {
     }
 
     @Override
-    public void getMovie(final Long id,final Func3<MovieEntity, List<ReviewMovieEntity>,
-            List<VideoMovieEntity>, Void> callback){
+    public void getMovie(final Long id,final Boolean favourite,final Func3<MovieEntity, List<ReviewMovieEntity>,
+                List<VideoMovieEntity>, Void> callback){
 
         if (mMovieCache.isCached(id)){
             mMovieCache.get(id, new Func3<MovieEntity, List<ReviewMovieEntity>, List<VideoMovieEntity>, Void>() {
@@ -115,7 +116,7 @@ public class CloudMovieDataStore implements MovieDataStore {
                 public Void call(final MovieEntity movieEntity,
                                  List<ReviewMovieEntity> reviewMovieEntities,
                                  List<VideoMovieEntity> videoMovieEntities) {
-                    if (reviewMovieEntities == null || videoMovieEntities == null){
+                    if (!favourite && (reviewMovieEntities == null || videoMovieEntities == null)){
                         MovieObservable movieObservable = new MovieObservable();
 
                         movieObservable.returned = new Func2<List<ReviewMovieEntity>,
@@ -143,7 +144,7 @@ public class CloudMovieDataStore implements MovieDataStore {
                 }
             });
         }else{
-            callback.call(null,null,null);
+            callback.call(null, null, null);
         }
 
        /* return Observable.create(new Observable.OnSubscribe<MovieEntity>() {

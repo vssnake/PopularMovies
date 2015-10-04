@@ -26,6 +26,7 @@ public class MovieDetailsActivity extends ComponentActivity<MovieComponent> {
 
     private static final String MOVIE_ID_KEY = "movieID";
 
+
     private Long movieID;
 
     @Bind(R.id.activity_details_movie_image)
@@ -36,6 +37,8 @@ public class MovieDetailsActivity extends ComponentActivity<MovieComponent> {
 
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mToolbarCollapsing;
+
+
 
     /**
      * Launch this activity

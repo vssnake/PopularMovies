@@ -42,7 +42,7 @@ public class MovieDetailsPresenterTest extends AndroidTestCase {
         System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
         MockitoAnnotations.initMocks(this);
         mMovieDetailsPresenter = new MovieDetailsPresenter(mMovieUseCase,
-                mockMovideModelDataMapper);
+                mockMovideModelDataMapper,mockContext);
         mMovieDetailsPresenter.setView(mockMovieDetailsView);
     }
 

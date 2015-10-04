@@ -21,4 +21,12 @@
     <string name="search_movie_tab_high_score">High Rated</string>
     <string name="search_movie_tab_favourites">Favourites</string>
     <string name="title_activity_movie_details">MovieDetailsActivity</string>
+
+
+    <!-- Review -->
+    <string name="reviews">Reviews</string>
+    <string name="review_author">Author Review :</string>
+    <string name="review_content">Content Review:</string>
+
+    <string name="action_share">Share</string>
 </resources>

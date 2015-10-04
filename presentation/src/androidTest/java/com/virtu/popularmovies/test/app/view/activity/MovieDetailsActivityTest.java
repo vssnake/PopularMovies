@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 
-import com.example.virtu.spotifystreamer.R;
+import com.virtu.popularmovies.presentation.R;
 import com.virtu.popularmovies.presentation.view.activity.MovieDetailsActivity;
 import com.virtu.popularmovies.presentation.view.activity.SearchMovieActivity;
 

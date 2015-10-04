@@ -17,7 +17,8 @@ import rx.Observable;
  */
 public class GetMovieUseCase extends UseCase {
 
-    private final Long mIdMovie;
+    private Long mIdMovie;
+    private Boolean mFavourite = false;
     private final com.virtu.popularmovies.domain.repository.MoviesRepository mMoviesRepository;
 
     @Inject
@@ -25,13 +26,21 @@ public class GetMovieUseCase extends UseCase {
                            PostExecutionThread postExecutionThread){
         super(threadExecutor,postExecutionThread);
 
-        this.mIdMovie = idMovie;
+        this.setIdMovie(idMovie);
         this.mMoviesRepository = moviesRepository;
 
     }
 
     @Override
     public Observable buildUseCaseObservable() {
-        return this.mMoviesRepository.getMovie(this.mIdMovie);
+        return this.mMoviesRepository.getMovie(mIdMovie,mFavourite);
+    }
+
+    public void setIdMovie(Long mIdMovie) {
+        this.mIdMovie = mIdMovie;
+    }
+
+    public void setFavourite(boolean favourite){
+        this.mFavourite = favourite;
     }
 }

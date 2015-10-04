@@ -2,7 +2,6 @@ package com.virtu.popularmovies.test.app.mapper;
 
 import android.test.InstrumentationTestCase;
 
-import com.example.virtu.spotifystreamer.BuildConfig;
 import com.virtu.popularmovies.domain.entities.MovieD;
 import com.virtu.popularmovies.presentation.model.MovieModelPresenter;
 import com.virtu.popularmovies.presentation.model.mapper.MovieModelDataMapper;

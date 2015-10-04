@@ -53,25 +53,31 @@ public class MovieEntityDataMapper {
         movie.setReleaseDate(movieEntity.getReleaseDate());
         movie.setVote_average(movieEntity.getVote_average());
 
-        List<Video> videos = new ArrayList<Video>();
-        for (VideoMovieEntity videoMovieEntity: videosEntities){
-            Video video = new Video();
-            video.setName(videoMovieEntity.getName());
-            video.setKeyVideo(videoMovieEntity.getKey());
-            video.setSite(videoMovieEntity.getSite());
-            video.setType(videoMovieEntity.getTypeVideo());
-            videos.add(video);
+        if (videosEntities != null){
+            List<Video> videos = new ArrayList<Video>();
+            for (VideoMovieEntity videoMovieEntity: videosEntities){
+                Video video = new Video();
+                video.setName(videoMovieEntity.getName());
+                video.setKeyVideo(videoMovieEntity.getKey());
+                video.setSite(videoMovieEntity.getSite());
+                video.setType(videoMovieEntity.getTypeVideo());
+                videos.add(video);
+            }
+            movie.setVideos(videos);
         }
-        movie.setVideos(videos);
+        if (reviewMovieEntities != null){
+            List<Review> reviews = new ArrayList<Review>();
+            for (ReviewMovieEntity reviewMovieEntity: reviewMovieEntities){
+                Review review = new Review();
+                review.setAuthor(reviewMovieEntity.getAuthor());
+                review.setContent(reviewMovieEntity.getContent());
+                reviews.add(review);
+            }
+            movie.setReviews(reviews);
+        }
 
-        List<Review> reviews = new ArrayList<Review>();
-        for (ReviewMovieEntity reviewMovieEntity: reviewMovieEntities){
-            Review review = new Review();
-            review.setAuthor(reviewMovieEntity.getAuthor());
-            review.setContent(reviewMovieEntity.getContent());
-            reviews.add(review);
-        }
-        movie.setReviews(reviews);
+
+
 
         return movie;
     }

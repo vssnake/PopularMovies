@@ -19,6 +19,7 @@ import com.virtu.popularmovies.presentation.injection.components.DaggerMovieComp
 import com.virtu.popularmovies.presentation.model.MovieModelPresenter;
 import com.virtu.popularmovies.presentation.injection.components.MovieComponent;
 import com.virtu.popularmovies.presentation.presenter.SearchMoviePresenter;
+import com.virtu.popularmovies.presentation.view.fragment.MovieDetailsActivityFragment;
 import com.virtu.popularmovies.presentation.view.fragment.SearchSearchMovieFragment;
 
 import butterknife.Bind;
@@ -27,6 +28,9 @@ import butterknife.ButterKnife;
 
 public class SearchMovieActivity extends ComponentActivity<MovieComponent> implements
         SearchSearchMovieFragment.MovieListListener{
+
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+    boolean mTwoPane = false;
 
     @Bind(R.id.pager)
     ViewPager mViewPager;
@@ -66,6 +70,19 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
 
+        if (findViewById(R.id.activity_search_move_fragment_frame) != null){
+            mTwoPane = true;
+
+            if (savedInstanceState == null){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.activity_search_move_fragment_frame,
+                                MovieDetailsActivityFragment.newInstance(-1l),DETAILFRAGMENT_TAG )
+                        .commit();
+            }
+        }else{
+            mTwoPane = false;
+        }
+
         //mTabLayout.setupWithViewPager(mViewPager);
 
     }
@@ -75,7 +92,7 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search_movies, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -103,7 +120,16 @@ public class SearchMovieActivity extends ComponentActivity<MovieComponent> imple
 
     @Override
     public void onMovieClicked(MovieModelPresenter movieModelPresenter) {
-        this.navigator.navigateToDetailsMovie(this,movieModelPresenter.getId());
+        if (mTwoPane){
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.activity_search_move_fragment_frame,
+                            MovieDetailsActivityFragment.newInstance(movieModelPresenter.getId()),DETAILFRAGMENT_TAG )
+                    .commit();
+        }else{
+            this.navigator.navigateToDetailsMovie(this,movieModelPresenter.getId());
+        }
+
+
     }
 
     @Override

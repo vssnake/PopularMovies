@@ -66,19 +66,17 @@ public class MoviesDataRepository implements MoviesRepository {
     }
 
     @Override
-    public Observable<MovieD> getMovie(final Long id) {
+    public Observable<MovieD> getMovie(final Long id,final Boolean favourite) {
         return Observable.create(new Observable.OnSubscribe<MovieD>() {
             @Override
             public void call(final Subscriber<? super MovieD> subscriber) {
-                mMovieDataStore.getMovie(id, new Func3<MovieEntity, List<ReviewMovieEntity>,
+                mMovieDataStore.getMovie(id,favourite, new Func3<MovieEntity, List<ReviewMovieEntity>,
                         List<VideoMovieEntity>, Void>() {
                     @Override
                     public Void call(MovieEntity movieEntity,
                                      List<ReviewMovieEntity> reviewMovieEntities,
                                      List<VideoMovieEntity> videoMovieEntities) {
-                        if (movieEntity == null ||
-                                reviewMovieEntities == null ||
-                                videoMovieEntities == null) {
+                        if (movieEntity == null) {
                             subscriber.onError(new MovieNotFoundException("Error getting a movie"));
                         }else{
                             MovieD movie = MoviesDataRepository.this.mMovieEntityDataMapper.transform(

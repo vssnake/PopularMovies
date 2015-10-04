@@ -2,9 +2,9 @@ package com.virtu.popularmovies.test.app.exception;
 
 import android.test.AndroidTestCase;
 
-import com.example.virtu.spotifystreamer.R;
 import com.virtu.popularmovies.data.exception.MovieNotFoundException;
 import com.virtu.popularmovies.data.exception.NetworkConnectionException;
+import com.virtu.popularmovies.presentation.R;
 import com.virtu.popularmovies.presentation.exception.ErrorMessageFactory;
 
 

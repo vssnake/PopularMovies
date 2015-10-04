@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.example.virtu.spotifystreamer.R;
+import com.virtu.popularmovies.presentation.R;
 import com.virtu.popularmovies.presentation.view.activity.SearchMovieActivity;
 
 import static org.hamcrest.CoreMatchers.is;

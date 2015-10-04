@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import com.virtu.popularmovies.domain.interactor.usesCases.GetMovieUseCase;
 import com.virtu.popularmovies.presentation.model.MovieModelPresenter;
 import com.virtu.popularmovies.domain.entities.MovieD;
 import com.virtu.popularmovies.domain.exception.DefaultErrorBundle;
@@ -27,7 +28,7 @@ public class MovieDetailsPresenter implements Presenter  {
 
     private Long mMovieID;
 
-    private UseCase mGetMovieUseCase;
+    private GetMovieUseCase mGetMovieUseCase;
 
     private MovieModelDataMapper mMovieModelDataMapper;
 
@@ -39,7 +40,7 @@ public class MovieDetailsPresenter implements Presenter  {
             @Named(MoviesModule.MOVIE) UseCase getMovieUseCase,
             MovieModelDataMapper movieModelDataMapper,
             Context context){
-        this.mGetMovieUseCase = getMovieUseCase;
+        this.mGetMovieUseCase =(GetMovieUseCase) getMovieUseCase;
         this.mMovieModelDataMapper = movieModelDataMapper;
         this.mContext = context;
     }
@@ -122,6 +123,8 @@ public class MovieDetailsPresenter implements Presenter  {
     }
 
     private void getDetailMovie(){
+        this.mGetMovieUseCase.setIdMovie(mMovieID);
+        this.mGetMovieUseCase.setFavourite(checkFavourite());
         this.mGetMovieUseCase.execute(new MovieListSubscriber());
     }
 

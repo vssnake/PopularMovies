@@ -45,7 +45,7 @@ public class GetMovieUseCaseTest {
     public void testGetMovieDetailsUseCaseObservableHappyCase(){
         getMovieUseCase.buildUseCaseObservable();
 
-        verify(mockMoviesRepository).getMovie(FAKE_MOVIE_ID);
+        verify(mockMoviesRepository).getMovie(FAKE_MOVIE_ID,false);
         verifyZeroInteractions(mockMoviesRepository);
         verifyZeroInteractions(mockThreadExecutor);
         verifyZeroInteractions(mockPostExecutionThread);

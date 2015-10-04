@@ -3,6 +3,7 @@ package com.virtu.popularmovies.test.app.presenter;
 import android.content.Context;
 import android.test.AndroidTestCase;
 
+import com.virtu.popularmovies.domain.interactor.usesCases.GetFavouriteMoviesUseCase;
 import com.virtu.popularmovies.domain.interactor.usesCases.GetHighestRatedMoviesUseCase;
 import com.virtu.popularmovies.domain.interactor.usesCases.GetPopularMoviesUseCase;
 import com.virtu.popularmovies.presentation.model.mapper.MovieModelDataMapper;
@@ -38,7 +39,12 @@ public class SearchMoviePresenterTest extends AndroidTestCase{
     private GetHighestRatedMoviesUseCase mockGetHighestRatedMoviesUseCase;
 
     @Mock
+    private GetFavouriteMoviesUseCase mockGetFavouriteMoviesUseCase;
+
+    @Mock
     private MovieModelDataMapper mockMovieDataMapper;
+
+
 
 
 
@@ -51,7 +57,9 @@ public class SearchMoviePresenterTest extends AndroidTestCase{
         mSearchMoviePresenter = new SearchMoviePresenter(
                 mockGetHighestRatedMoviesUseCase,
                 mockGetPopularMoviesUseCase,
-                mockMovieDataMapper);
+                mockGetFavouriteMoviesUseCase,
+                mockMovieDataMapper,
+                mockContext);
         mSearchMoviePresenter.setView(mockSearchMovieView);
     }
 

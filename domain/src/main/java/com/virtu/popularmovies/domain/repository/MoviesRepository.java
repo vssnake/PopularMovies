@@ -13,7 +13,7 @@ public interface MoviesRepository {
 
     Observable<List<MovieD>> getPopularMoviesDesc();
 
-    Observable<MovieD> getMovie(Long id);
+    Observable<MovieD> getMovie(Long id,Boolean favourite);
 
     Observable<List<MovieD>> getFavouriteMovies(List<Long> ids);
 
